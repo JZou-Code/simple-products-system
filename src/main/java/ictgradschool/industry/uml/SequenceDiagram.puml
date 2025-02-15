@@ -1,0 +1,65 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant "user : User" as u
+participant ": WelcomeScreen" as w
+participant ": InventoryManager" as im
+participant ": PointOfSale" as pos
+participant ": Cart" as c
+participant ": FileManager" as f
+'participant ": Product" as p
+'participant ": InventoryManagerTableAdapter" as imd
+participant ": Validator" as v
+
+u -> w : start
+w -> f : link to a file
+w -> w : Close filestore
+
+w -> im : Create new window, WelcomeScreen invisible
+im -> f : read file and display
+im --> u : show table inventory
+u -> im : create new ones
+im --> u : dialog to get data
+im -> v : validate
+v --> im : result
+alt if new info invalid
+im --> u : invalid input
+else if new info valid
+im -> im : create new ones
+end note
+im -> f : save data
+u -> im : remove, modify
+im -> im : modify data, show on table
+im -> f : save data
+u -> im : return to WelcomeScreen
+im --> w : Inventory closed, WelcomeScreen visible
+
+w -> pos : Create new window, WelcomeScreen invisible, inventory closed
+pos -> f : read file and display
+pos -> c : set initial data
+c --> u : show items
+u -> pos : add products
+pos -> f : reduce inventory
+pos -> c : set new data
+c --> u : show items
+u -> pos : remove products
+pos -> f : increase inventory
+pos -> c : set new data
+c --> u : show items
+c -> pos : checkout
+c -> f : create receipt
+f --> u : ask for receive receipt
+alt if yes
+u -> f : path to save
+pos -> c : remove all
+c -> f : remove items from file
+f --> u : receipt
+else if no
+f -> f : don't save receipt and keep items in cart
+end note
+u -> pos : return to WelcomeScreen
+pos --> w : PointOfSale closed, WelcomeScreen visible
+
+@enduml

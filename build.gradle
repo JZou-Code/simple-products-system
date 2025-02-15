@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group 'ictgradschool.industry'
+version '1.0'
+
+java {
+    sourceCompatibility(JavaVersion.VERSION_17)
+    targetCompatibility(JavaVersion.VERSION_17)
+}
+
+tasks.named('wrapper') {
+    distributionType = Wrapper.DistributionType.ALL
+    gradleVersion = '7.6'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
